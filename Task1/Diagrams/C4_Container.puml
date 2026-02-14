@@ -1,0 +1,64 @@
+@startuml C4_Future_2_0
+!include Templates/C4_Component.puml
+
+Person(doctor, "Врач", "Просматривает медицинские отчеты")
+Person(admin, "Администратор офиса", "Строит кросс-отчеты, регулирует доступ")
+Person(fintech, "Финтех-аналитик", "Строит финансовые отчеты")
+Person(ai_ingeneer, "ИИ инженер", "Обучает модели на основе агрегированных данных")
+Person(client, "Клиент", "Потребитель финансовых и медицинских услуг")
+
+System_Boundary(system, "Экосистема Будущее 2.0") {
+    System_Boundary(pso, "Портал самообслуживания данных") {
+        Container(bi_portal, "BI-Портал", "Power BI", "Визуализация и создание отчетов")
+        Container(data_mart_portal, "Витрина данных", "Веб-приложение", "Портал для доступа к отчетам, управления метаданными")
+    }
+    
+    System_Boundary(cloud, "Доменные Data Products (Облако)") {
+        Container(medical_data_product, "Медицинский Data Product", "Snowflake", "Агрегированные данные о пациентах (без мед. карт), посещениях, процедурах, инвентаре")
+        Container(financial_data_product, "Финтех Data Product", "Snowflake", "Данные по счетам, кредитам, транзакциям, финансовая отчетность")
+        Container(ai_data_product, "ИИ Data Product", "Amazon S3", "Обучающие датасеты, фичи, результаты прогнозов моделей")
+    }
+    
+    System_Boundary(os, "Операционные системы") {
+        Container(legacy_dwh, "Legacy DWH", "MS SQL Server 2008", "Источник сырых данных. Постепенно выводится из прямого аналитического использования.")
+        Container(ai_services, "ИИ-Сервисы", "Python", "Сервисы для анализа медицинских снимков и данных")
+        Container(fintech_services, "Финтех-Сервисы", "Golang, Java", "Банковские и платежные сервисы")
+        Container(clinical_interface, "Клиентский интерфейс", "PowerBuilder", "Фронтенд для операторов в клиниках")
+    }
+    
+    ContainerDb(data_lake, "Data Lake", "Amazon S3", "Сырые, необработанные данные для глубокого анализа и ML")
+    
+    Container(integration_bus, "Интеграционная шина", "Apache Camel", "Обеспечивает коммуникацию между сервисами")
+}
+
+Rel(admin, bi_portal, "Строит кросс-доменные отчеты")
+Rel(doctor, bi_portal, "Просматривает отчеты по клинике")
+Rel(fintech, bi_portal, "Строит финансовые отчеты")
+Rel(ai_ingeneer, ai_data_product, "Получает данные для обучения моделей")
+
+Rel(client, clinical_interface, "Получает медицинские услуги")
+Rel(client, fintech_services, "Получает финансовые услуги")
+
+Rel(bi_portal, data_mart_portal, "Запрашивает данные через API")
+Rel(data_mart_portal, medical_data_product, "Читает агрегированные медицинские данные")
+Rel(data_mart_portal, financial_data_product, "Читает финансовые данные")
+Rel(data_mart_portal, ai_data_product, "Читает данные для аналитики ИИ")
+
+Rel(medical_data_product, data_lake, "Читает/записывает сырые данные")
+Rel(financial_data_product, data_lake, "Читает/записывает сырые данные")
+Rel(ai_data_product, data_lake, "Использует сырые данные для создания датасетов")
+
+Rel_R(legacy_dwh, data_lake, "CDC / ETL", "Поставляет сырые данные")
+Rel_R(clinical_interface, data_lake, "Логи / ETL", "Поставляет данные о визитах")
+Rel_R(ai_services, data_lake, "Выгружает результаты", "Поставляет данные прогнозов")
+Rel_R(fintech_services, data_lake, "Логи / ETL", "Поставляет финансовые транзакции")
+
+Rel(clinical_interface, integration_bus, "Отправляет события", "Message Queue")
+Rel(ai_services, integration_bus, "Потребляет/отправляет события", "Message Queue")
+Rel(fintech_services, integration_bus, "Потребляет/отправляет события", "Message Queue")
+Rel(legacy_dwh, integration_bus, "Отправляет события изменений", "CDC")
+
+Rel_L(ai_services, medical_data_product, "Записывает данные (кроме PII)")
+Rel_L(fintech_services, financial_data_product, "Записывает данные")
+
+@enduml
