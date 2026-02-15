@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  techradar:
+    build: 
+      context: .
+    container_name: techradar
+    ports:
+      - "9080:9080"
+    environment:
+      NGINX_HOST: localhost
+      NGINX_PORT: 9080
+    restart: unless-stopped
+    # Для разработки с автоматическим обновлением
+    # volumes:
+    #   - ./build:/usr/share/nginx/html/techradar:ro

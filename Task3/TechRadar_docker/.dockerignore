@@ -1,0 +1,11 @@
+.git
+.gitignore
+node_modules
+build
+.techradar
+README.md
+*.log
+.env
+.editorconfig
+.idea
+.vscode
