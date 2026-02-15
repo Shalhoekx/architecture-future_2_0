@@ -3,11 +3,11 @@
 
 # Задание 1
 
-[Задание 1](Task1/readme.md)
+[Задание 1](Task1/Readme.md)
 
 # Задание 2
 
-[Задание 2](Task2/readme.md)
+[Задание 2](Task2/Readme.md)
 
 # Задание 3
 
