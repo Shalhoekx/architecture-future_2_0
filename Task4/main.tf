@@ -59,7 +59,7 @@ resource "yandex_compute_disk" "boot-disk" {
   name     = "bootvmdisk"
   type     = "network-hdd"
   zone     = var.zone
-  size     = "10"
+  size     = "15"
   image_id = var.image_id
   folder_id = var.target_folder_id
 }
