@@ -1,2 +1,6 @@
 ﻿Task3/tech_radar/node_modules
 Task3/tech_radar/.techradar
+Task4/.terraform
+Task4/terraform.tfstate.backup
+Task4/test
+Task4/test.pub
